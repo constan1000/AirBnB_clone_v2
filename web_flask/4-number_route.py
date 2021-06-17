@@ -1,42 +1,45 @@
 #!/usr/bin/python3
-"""simple flask app
+"""
+flask model
+
 """
 from flask import Flask
+
 app = Flask(__name__)
 
 
-@app.route("/", strict_slashes=False)
-def hello_hbnb():
-    """root route
-    """
-    return "Hello HBNB!"
-
-
-@app.route("/hbnb", strict_slashes=False)
+@app.route('/', strict_slashes=False)
 def hbnb():
-    """hbnb
     """
-    return "HBNB"
-
-
-@app.route("/c/<text>", strict_slashes=False)
-def cisfun(text):
-    """c what
     """
-    return "C {}".format(text.replace('_', ' '))
+    return 'Hello HBNB!'
 
 
-@app.route("/python/", strict_slashes=False)
-@app.route("/python/<text>", strict_slashes=False)
-def pythoniscool(text='is cool'):
-    """python is cool
+@app.route('/hbnb', strict_slashes=False)
+def index():
     """
-    return "Python {}".format(text.replace('_', ' '))
+    """
+    return 'HBNB'
 
 
-@app.route("/number/<int:n>", strict_slashes=False)
-def intnumber(n):
-    """accept integer
+@app.route('/c/<text>', strict_slashes=False)
+def C_is(text):
+    """
+    """
+    return 'C is {:s}'.format(text.replace('_', ' '))
+
+
+@app.route('/python/', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python/<text>')
+def python(text):
+    """
+    """
+    return 'Python {:s}'.format(text.replace('_', ' '))
+
+
+@app.route('/number/<int:n>', strict_slashes=False)
+def number(n):
+    """
     """
     return "{} is a number".format(n)
 

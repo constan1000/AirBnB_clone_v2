@@ -1,41 +1,33 @@
 #!/usr/bin/python3
-"""hbnb filter
-"""
-from flask import Flask, render_template, Markup
+from flask import Flask
+from flask import render_template
+from flask import g
 from models import storage
-import sys
+from models.state import State
+from models.amenity import Amenity
+from models.place import Place
+"""
+Script that starts a Flask web application
+"""
 app = Flask(__name__)
 
 
 @app.teardown_appcontext
-def shutdown_session(exception=None):
-    """reload storage after each request
-    """
-    storage.close()
+def teardown_data(self):
+        storage.close()
 
 
-@app.route("/hbnb", strict_slashes=False)
-def states_cities_list():
-    """pass states and cities sorted by name
-    and amenities
-    """
-    states = list(storage.all("State").values())
-    states.sort(key=lambda x: x.name)
-    for state in states:
-        state.cities.sort(key=lambda x: x.name)
-    amenities = list(storage.all("Amenity").values())
-    amenities.sort(key=lambda x: x.name)
-    places = list(storage.all("Place").values())
-    places.sort(key=lambda x: x.name)
-    for place in places:
-        place.description = Markup(place.description)
-    return render_template(
-        '100-hbnb.html',
-        states=states,
-        amenities=amenities,
-        places=places
-    )
-
+@app.route('/hbnb', strict_slashes=False)
+def hbnb():
+    """ return all states in the db  """
+    states = storage.all(State).values()
+    amenities = storage.all(Amenity).values()
+    places = storage.all(Place).values()
+    print(places)
+    return render_template('100-hbnb.html',
+                           states=states,
+                           places=places,
+                           amenities=amenities)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)

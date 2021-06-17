@@ -1,26 +1,27 @@
 #!/usr/bin/python3
-"""simple flask app
+"""
+flask model
 """
 from flask import Flask, render_template
 from models import storage
+from models.state import State
 app = Flask(__name__)
+storage.all()
 
 
 @app.teardown_appcontext
-def shutdown_session(exception=None):
-    """reload storage after each request
+def teardown_data(self):
+    """
+        refrech data
     """
     storage.close()
 
 
-@app.route("/cities_by_states", strict_slashes=False)
-def states_cities_list():
-    """list states and cities sorted by name
-    """
-    states = list(storage.all("State").values())
-    states.sort(key=lambda x: x.name)
-    for state in states:
-        state.cities.sort(key=lambda x: x.name)
+@app.route('/cities_by_states', strict_slashes=False)
+def cities_by_states():
+    """ return all citie in the db  """
+    states = storage.all(State)
+
     return render_template('8-cities_by_states.html', states=states)
 
 

@@ -1,40 +1,38 @@
 #!/usr/bin/python3
-"""simple flask app
+"""
+flask model
 """
 from flask import Flask, render_template
 from models import storage
-from os import environ as env
+from models.state import State
 app = Flask(__name__)
+storage.all()
 
 
 @app.teardown_appcontext
-def shutdown_session(exception=None):
-    """reload storage after each request
+def teardown_data(self):
+    """
+        refrech data
     """
     storage.close()
 
 
+@app.route('/states', strict_slashes=False)
 @app.route("/states/<id>", strict_slashes=False)
-@app.route("/states", strict_slashes=False)
-def states_cities_list(id=None):
-    """show state and cities if id is given
-    otherwise list all states
+def states_id(id=None):
     """
-    states = storage.all("State")
-    if id:
-        state = states.get('State.{}'.format(id))
-        states = [state] if state else []
+        list state by id if found
+    """
+    info = []
+    states = storage.all(State)
+    if id is None:
+        for k in states:
+            info.append(states[k])
     else:
-        states = list(states.values())
-    states.sort(key=lambda x: x.name)
-    for state in states:
-        state.cities.sort(key=lambda x: x.name)
-    return render_template(
-        '9-states.html',
-        states=states,
-        len=len(states),
-        id=id
-    )
+        id = 'State.' + id
+        info = states.get(id)
+    return render_template('9-states.html', states=info, id=id)
+    return render_template('9-states.html', state=id)
 
 
 if __name__ == "__main__":
