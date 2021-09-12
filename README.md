@@ -165,6 +165,6 @@ No known bugs at this time.
 
 ## Authors
 Mike M <michael.mbea@gmail.com>
-
+Mejdi Hrairi <2292@holbertonschool.com>
 <br>
 <center><img src="https://www.holbertonschool.com/holberton-logo.png"></center>
